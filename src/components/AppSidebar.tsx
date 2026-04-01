@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { LayoutDashboard, ScrollText, GitBranch, Bell, Settings, Radio, Search } from 'lucide-react';
+import { LayoutDashboard, ScrollText, GitBranch, Bell, Settings, Radio, Search, LogOut } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 const navItems = [
   { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
@@ -13,6 +14,7 @@ const navItems = [
 
 export function AppSidebar() {
   const location = useLocation();
+  const { user, signOut } = useAuth();
 
   return (
     <aside className="w-16 lg:w-56 bg-card border-r border-border flex flex-col shrink-0 h-screen sticky top-0">
@@ -44,13 +46,22 @@ export function AppSidebar() {
           );
         })}
       </nav>
-      <div className="p-3 border-t border-border">
+      <div className="p-3 border-t border-border space-y-2">
         <div className="flex items-center gap-2">
           <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
-            <span className="text-[10px] text-primary font-bold">A</span>
+            <span className="text-[10px] text-primary font-bold">
+              {user?.email?.[0]?.toUpperCase() ?? 'U'}
+            </span>
           </div>
-          <span className="hidden lg:block text-xs text-muted-foreground">Admin</span>
+          <span className="hidden lg:block text-xs text-muted-foreground truncate">{user?.email}</span>
         </div>
+        <button
+          onClick={signOut}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-md text-xs text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors w-full"
+        >
+          <LogOut className="w-3 h-3" />
+          <span className="hidden lg:block">Sign Out</span>
+        </button>
       </div>
     </aside>
   );
